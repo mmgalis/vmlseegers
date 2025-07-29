@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Model Viewer</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+    }
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+    }
+    .progress-bar {
+      display: block;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.2);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    .update-bar {
+      height: 100%;
+      background: white;
+      width: 0%;
+    }
+    #ar-button {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 16px;
+      background: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    #ar-prompt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<model-viewer id="viewer"
+              src="garage_and_office.glb"
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              camera-controls
+              tone-mapping="neutral"
+              poster="poster.webp"
+              shadow-intensity="2"
+              exposure="0.78"
+              shadow-softness="1"
+              camera-orbit="42.25deg 72.21deg 20.06m"
+              field-of-view="30deg"
+              auto-rotate>
+    <button class="Hotspot view-button" slot="hotspot-1"
+            data-position="0.3176817214239088m 1.3214951883517134m -0.825962642977612m"
+            data-normal="0.013414657436825723m 0.28229498512371076m 0.9592338548757839m"
+            data-orbit="0deg 75deg 2m"
+            data-target="0.3176817214239088m 1.3214951883517134m -0.825962642977612m">
+    BMW motoren
+    </button>
+
+    <button class="Hotspot view-button" slot="hotspot-2"
+            data-position="0.6416934466843882m 5.646171389774211m -1.4901365343440856m"
+            data-normal="-0.00991441040889878m -0.002856440237703457m 0.9999467711910532m"
+            data-orbit="0deg 75deg 2m"
+            data-target="0.6416934466843882m 5.646171389774211m -1.4901365343440856m">
+    Centralpoint (nu: Dustin)
+    </button>
+
+  <div class="progress-bar hide" slot="progress-bar">
+    <div class="update-bar"></div>
+  </div>
+  <button slot="ar-button" id="ar-button">
+    View in your space
+  </button>
+  <div id="ar-prompt">
+    <img src="https://modelviewer.dev/shared-assets/icons/hand.png" alt="AR prompt">
+  </div>
+</model-viewer>
+
+<script type="module">
+    const modelViewer2 = document.querySelector("#viewer");
+    const annotationClicked = (annotation) => {
+    let dataset = annotation.dataset;
+    modelViewer2.cameraTarget = dataset.target;
+    modelViewer2.cameraOrbit = dataset.orbit;
+    modelViewer2.fieldOfView = '45deg';
+    }
+
+    modelViewer2.querySelectorAll('button').forEach((hotspot) => {
+    hotspot.addEventListener('click', () => annotationClicked(hotspot));
+    });
+</script>
+</body>
+</html>
